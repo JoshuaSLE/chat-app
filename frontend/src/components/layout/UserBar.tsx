@@ -6,7 +6,7 @@ export default function UserBar() {
   return (
     <div>
       <span>{user?.username}</span>
-      <button onClick={logout}>Log out</button>
+      <button onClick={logout}>Logout</button>
     </div>
   );
 }

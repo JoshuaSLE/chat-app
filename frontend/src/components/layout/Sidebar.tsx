@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useRooms } from "../../hooks/useRooms";
 import UserBar from "./UserBar";
 
 export default function Sidebar() {
-  const [, setView] = useState<"dm" | "room">("dm");
+  const [view, setView] = useState<"dm" | "room">("dm");
 
-  // fake data for now
-  const fakeItems: string[] = ["general", "random", "off-topic"];
+  const { dms, groups, loading } = useRooms();
+  const items = view === "dm" ? dms : groups;
 
   return (
     <aside>
@@ -15,9 +16,11 @@ export default function Sidebar() {
       </div>
 
       <ul>
-        {fakeItems.map((name) => (
-          <li key={name}>
-            <button>{name}</button>
+        {loading && <li>Loading...</li>}
+        {!loading && items.length === 0 && <li>Nothing here yet</li>}
+        {items.map((r) => (
+          <li key={r.room_id}>
+            <button>{r.room_name}</button>
           </li>
         ))}
       </ul>

@@ -11,7 +11,7 @@ import api from "./client";
 export const create = (data: CreateRoom) =>
   api.post<CreateRoomResponse>("/rooms/", data);
 
-export const list = () => api.get<ListRoomResponse[]>("/rooms/");
+export const list = () => api.get<ListRoomResponse[]>("/rooms");
 
 export const update = (room_id: string, data: UpdateRoom) =>
   api.patch<UpdateRoomResponse>(`/rooms/update/${room_id}`, data);

@@ -8,7 +8,7 @@ import type {
 } from "../types/messages";
 
 export const create = (room_id: string, data: CreateMessage) =>
-  api.post<CreateMessageResponse>(`/rooms/${room_id}/messages/`, data);
+  api.post<CreateMessageResponse>(`/rooms/${room_id}/messages`, data);
 
 export const get = (room_id: string, params: GetMessage) =>
-  api.get<GetMessageResponse[]>(`/rooms/${room_id}/messages/`, { params });
+  api.get<GetMessageResponse[]>(`/rooms/${room_id}/messages`, { params });
