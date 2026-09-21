@@ -1,6 +1,6 @@
 export type CreateRoom = {
   readonly name?: string;
-  readonly direct: boolean;
+  readonly is_direct: boolean;
   readonly members: Array<string>;
 };
 

@@ -9,7 +9,9 @@ pub struct CreateRoom {
     #[serde(default, deserialize_with = "trimmed_option")]
     #[validate(length(min = 3, max = 30, message = "Name must be 3-30 characters"))]
     pub name: Option<String>,
-    pub direct: bool,
+    pub is_direct: bool,
+    
+    #[validate(length(min = 1, message = "At least one member must be specified"))]
     pub members: Vec<String>,
 }
 
@@ -30,6 +32,8 @@ pub struct UpdateRoom {
     #[serde(default, deserialize_with = "trimmed_option")]
     #[validate(length(min = 3, max = 30, message = "Name must be 3-30 characters"))]
     pub name: Option<String>,
+
+    #[validate(length(min = 1, message = "At least one member must be specified"))]
     pub members: Vec<String>,
 }
 

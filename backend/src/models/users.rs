@@ -16,7 +16,6 @@ pub struct RegisterUser {
     #[serde(default, deserialize_with = "trimmed_option")]
     #[validate(length(max = 255, message = "Bio cannot exceed 255 characters"))]
     pub bio: Option<String>,
-
     pub avatar: Option<String>,
 }
 
@@ -47,7 +46,6 @@ pub struct UpdateUser {
     #[serde(default, deserialize_with = "trimmed_option")]
     #[validate(length(max = 255, message = "Bio cannot exceed 255 characters"))]
     pub bio: Option<String>,
-
     pub avatar: Option<String>,
 }
 

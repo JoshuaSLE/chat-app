@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRooms } from "../../hooks/useRooms";
+import { NavLink } from "react-router";
 import UserBar from "./UserBar";
 
 export default function Sidebar() {
@@ -20,7 +21,18 @@ export default function Sidebar() {
         {!loading && items.length === 0 && <li>Nothing here yet</li>}
         {items.map((r) => (
           <li key={r.room_id}>
-            <button>{r.room_name}</button>
+            <NavLink
+              to={`/rooms/${r.room_id}`}
+              className={({ isActive }) =>
+                `block rounded px-3 py-2 text-sm ${
+                  isActive
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:bg-gray-700"
+                }`
+              }
+            >
+              {r.room_name}
+            </NavLink>
           </li>
         ))}
       </ul>

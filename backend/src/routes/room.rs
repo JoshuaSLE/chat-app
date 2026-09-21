@@ -3,7 +3,7 @@ use axum::{
     extract::{Path, State},
     http::StatusCode,
 };
-use sqlx::{query, query_as};
+use sqlx::{query, query_as, query_scalar};
 use uuid::Uuid;
 use validator::Validate;
 
@@ -27,97 +27,91 @@ pub async fn create(
     payload.validate()?;
     let creator_id = claims.sub;
 
-    let mut member_ids: Vec<Uuid> = query!(
-        r#"
-        SELECT id FROM users
-        WHERE username = ANY($1)
-        "#,
-        &payload.members[..]
+    let mut requested_members = payload.members.clone();
+    requested_members.sort();
+    requested_members.dedup();
+
+    let recipient_ids = query_scalar!(
+        "SELECT id FROM users WHERE username = ANY($1)",
+        &requested_members[..]
     )
     .fetch_all(&state.pool)
-    .await?
-    .into_iter()
-    .map(|row| row.id)
-    .collect();
+    .await?;
 
-    if member_ids.len() != payload.members.len() {
+    if recipient_ids.len() != requested_members.len() {
         return Err(AppError::UserNotFound);
     }
 
-    if payload.direct {
-        if member_ids.len() != 1 {
+    let all_member_ids = if payload.is_direct {
+        if recipient_ids.len() != 1 {
             return Err(AppError::BadRequest(
-                "Direct messages must have exactly one recipient".into(),
+                "Direct rooms must have exactly one recipient".into(),
             ));
         }
-        if member_ids[0] == creator_id {
+
+        let recipient_id = recipient_ids[0];
+        if recipient_id == creator_id {
             return Err(AppError::BadRequest(
                 "You cannot start a direct message with yourself".into(),
             ));
         }
 
-        let dm_participants = vec![creator_id, member_ids[0]];
-        let existing_room = query_as!(
-            CreateRoomResponse,
+        let existing_dm = query!(
             r#"
             SELECT room_id FROM room_members
             WHERE room_id IN (SELECT id FROM rooms WHERE is_direct = true)
             GROUP BY room_id
             HAVING COUNT(user_id) = 2 AND bool_and(user_id = ANY($1::uuid[]))
             "#,
-            &dm_participants as &[Uuid]
+            &[creator_id, recipient_id] as &[Uuid]
         )
         .fetch_optional(&state.pool)
         .await?;
 
-        if let Some(room) = existing_room {
-            return Ok((StatusCode::OK, Json(room)));
+        if existing_dm.is_some() {
+            return Err(AppError::BadRequest(
+                "A direct room with this user already exists".into(),
+            ));
         }
-    }
 
-    member_ids.push(creator_id);
-    member_ids.sort();
-    member_ids.dedup();
+        vec![creator_id, recipient_id]
+    } else {
+        let mut members = recipient_ids;
+        members.push(creator_id);
+        members.sort();
+        members.dedup();
 
-    if member_ids.len() < 2 {
-        return Err(AppError::BadRequest(
-            "You cannot start a group message with yourself, add at least one more member".into(),
-        ));
-    }
-
-    let room = CreateRoomResponse {
-        room_id: Uuid::now_v7(),
+        if members.len() < 2 {
+            return Err(AppError::BadRequest(
+                "Group rooms require at least 2 distinct members".into(),
+            ));
+        }
+        members
     };
-    let mut tx = state.pool.begin().await?;
+
+    let room_id = Uuid::now_v7();
 
     query!(
         r#"
-        INSERT INTO rooms (id, name, is_direct, created_by)
-        VALUES ($1, $2, $3, $4)
-        "#,
-        room.room_id,
-        payload.name,
-        payload.direct,
-        creator_id
-    )
-    .execute(&mut *tx)
-    .await?;
-
-    query!(
-        r#"
+        WITH new_room AS (
+            INSERT INTO rooms (id, name, is_direct, created_by)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id
+        )
         INSERT INTO room_members (room_id, user_id)
-        SELECT $1, * FROM UNNEST($2::uuid[])
-        ON CONFLICT DO NOTHING
+        SELECT id, UNNEST($5::uuid[])
+        FROM new_room
         "#,
-        room.room_id,
-        &member_ids as &[Uuid]
+        room_id,
+        payload.name,
+        payload.is_direct,
+        creator_id,
+        &all_member_ids as &[Uuid]
     )
-    .execute(&mut *tx)
+    .execute(&state.pool)
     .await?;
 
-    tx.commit().await?;
-
-    Ok((StatusCode::CREATED, Json(room)))
+    Ok((StatusCode::CREATED, Json(CreateRoomResponse { room_id })))
 }
 
 pub async fn list(
