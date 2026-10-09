@@ -1,3 +1,3 @@
 export default function RoomPage() {
-  return <div>RoomPage</div>;
+  return <div>Room Page</div>;
 }

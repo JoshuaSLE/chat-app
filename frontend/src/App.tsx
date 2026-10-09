@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import EmptyState from "./pages/EmptyState";
 import AppShell from "./components/layout/AppShell";
+import RoomPage from "./pages/RoomPage";
 
 export default function App() {
   return (
@@ -14,10 +15,7 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<AppShell />}>
           <Route index element={<EmptyState />} />
-          <Route
-            path="rooms/:roomId"
-            element={<div>Room page placeholder</div>}
-          />
+          <Route path="rooms/:roomId" element={<RoomPage />} />
         </Route>
       </Route>
     </Routes>
