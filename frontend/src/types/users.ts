@@ -44,10 +44,12 @@ export type SearchUser = {
   readonly username: string;
 };
 
-export type SearchUserResponse = {
+export type UserSearchResult = {
   readonly username: string;
   readonly bio?: string;
 };
+
+export type SearchUserResponse = UserSearchResult[];
 
 export type StatusUser = {
   readonly username: string;

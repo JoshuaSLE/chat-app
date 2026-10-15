@@ -18,7 +18,7 @@ export type GetMessage = {
   readonly before?: Date;
 };
 
-export type GetMessageResponse = {
+export type Message = {
   readonly id: string;
   readonly username: string;
   readonly body?: string;
@@ -26,3 +26,5 @@ export type GetMessageResponse = {
   readonly attachment_type?: string;
   readonly created_at: Date;
 };
+
+export type GetMessageResponse = Message[];

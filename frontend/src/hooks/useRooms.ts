@@ -3,7 +3,7 @@ import { list } from "../api/room";
 import type { ListRoomResponse } from "../types/rooms";
 
 export function useRooms() {
-  const [rooms, setRooms] = useState<ListRoomResponse[]>([]);
+  const [rooms, setRooms] = useState<ListRoomResponse>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

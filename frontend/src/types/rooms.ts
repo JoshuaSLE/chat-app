@@ -8,11 +8,13 @@ export type CreateRoomResponse = {
   readonly room_id: string;
 };
 
-export type ListRoomResponse = {
+export type Room = {
   readonly room_id: string;
   readonly is_direct: boolean;
   readonly room_name: string;
 };
+
+export type ListRoomResponse = Room[];
 
 export type UpdateRoom = {
   readonly name?: string;

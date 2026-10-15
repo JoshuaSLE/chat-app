@@ -72,7 +72,7 @@ pub async fn get(
     let user_id = claims.sub;
     let limit = params.limit.unwrap_or(50).min(100);
 
-    let messages = query_as!(
+    let mut messages = query_as!(
         GetMessageResponse,
         r#"
         SELECT
@@ -100,6 +100,8 @@ pub async fn get(
     )
     .fetch_all(&state.pool)
     .await?;
+
+    messages.reverse();
 
     Ok((StatusCode::OK, Json(messages)))
 }
