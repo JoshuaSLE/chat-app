@@ -21,6 +21,7 @@ pub struct CreateMessageResponse {
     pub body: Option<String>,
     pub attachment_key: Option<String>,
     pub attachment_type: Option<String>,
+
     #[serde(with = "time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
 }
@@ -28,6 +29,7 @@ pub struct CreateMessageResponse {
 #[derive(Debug, Deserialize)]
 pub struct GetMessage {
     pub limit: Option<i64>,
+
     #[serde(default, with = "time::serde::rfc3339::option")]
     pub before: Option<OffsetDateTime>,
 }
@@ -39,6 +41,7 @@ pub struct GetMessageResponse {
     pub body: Option<String>,
     pub attachment_key: Option<String>,
     pub attachment_type: Option<String>,
+
     #[serde(with = "time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
 }

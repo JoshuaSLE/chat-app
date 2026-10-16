@@ -10,12 +10,12 @@ export type CreateMessageResponse = {
   readonly body?: string;
   readonly attachment_key?: string;
   readonly attachment_type?: string;
-  readonly created_at: Date;
+  readonly created_at: string;
 };
 
 export type GetMessage = {
   readonly limit?: number;
-  readonly before?: Date;
+  readonly before?: string;
 };
 
 export type Message = {
@@ -24,7 +24,7 @@ export type Message = {
   readonly body?: string;
   readonly attachment_key?: string;
   readonly attachment_type?: string;
-  readonly created_at: Date;
+  readonly created_at: string;
 };
 
 export type GetMessageResponse = Message[];

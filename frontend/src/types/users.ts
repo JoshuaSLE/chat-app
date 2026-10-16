@@ -34,8 +34,8 @@ export type UpdateUserResponse = {
 export type MeUserResponse = {
   readonly username: string;
   readonly bio?: string;
-  readonly created_at: Date;
-  readonly last_seen?: Date;
+  readonly created_at: string;
+  readonly last_seen?: string;
   readonly online: boolean;
   readonly avatar_key?: string;
 };
@@ -56,6 +56,6 @@ export type StatusUser = {
 };
 
 export type StatusUserResponse = {
-  readonly last_seen?: Date;
+  readonly last_seen?: string;
   readonly online: boolean;
 };

@@ -60,8 +60,10 @@ pub struct UpdateUserResponse {
 pub struct MeUserResponse {
     pub username: String,
     pub bio: Option<String>,
+
     #[serde(with = "time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
+
     #[serde(default, with = "time::serde::rfc3339::option")]
     pub last_seen: Option<OffsetDateTime>,
     pub online: bool,
