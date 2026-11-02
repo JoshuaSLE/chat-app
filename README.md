@@ -41,11 +41,11 @@ A self-hosted, full-stack messaging application for direct and group communicati
 
 ## Documentation
 
-- [Architecture](docs/architecture.md) (planned)
-- [Database](docs/database.md) (planned)
-- [Security](docs/security.md) (planned)
-- [API](docs/api.md) (planned)
-- [Decisions](docs/decisions.md) (planned)
+- [Architecture](docs/architecture.md)
+- [Database](docs/database.md)
+- [Security](docs/security.md)
+- [API](docs/api.md)
+- [Decisions](docs/decisions.md)
 
 ## Getting Started
 
