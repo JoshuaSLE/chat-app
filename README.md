@@ -20,8 +20,8 @@ A self-hosted, full-stack messaging application for direct and group communicati
 
 ## Milestones
 
-- [ ] **1. Architecture and specification:** Finalize technical documentation and design decisions.
-- [ ] **2. Infrastructure setup:** Provision per-environment PostgreSQL databases and roles, and Garage buckets and credentials.
+- [x] **1. Architecture and specification:** Finalize technical documentation and design decisions.
+- [x] **2. Infrastructure setup:** Provision per-environment PostgreSQL databases and roles, and Garage buckets and credentials.
 - [ ] **3. Core services:** Database migrations, authentication, sessions, invitation-only registration.
 - [ ] **4. Messaging features:** REST-based direct messaging, group conversations, membership authorization.
 - [ ] **5. Real-time and media:** WebSockets, presence, typing indicators, file attachments.

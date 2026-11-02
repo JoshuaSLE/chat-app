@@ -8,3 +8,20 @@ dotenvy = "~0.15"
 
 tracing = "~0.1"
 tracing-subscriber = { version = "~0.3", features = ["env-filter"] }
+
+tokio = { version = "~1.54", features = ["full"] }
+
+anyhow = "~1.0"
+
+serde = { version = "~1.0", features = ["derive"] }
+uuid = { version = "~1.29", features = ["v7", "serde"] }
+time = "~0.3"
+sqlx = { version = "~0.9", features = [
+    "runtime-tokio",
+    "postgres",
+    "derive",
+    "macros",
+    "migrate",
+    "uuid",
+    "time",
+] }
