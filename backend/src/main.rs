@@ -1,12 +1,12 @@
 use anyhow::Context;
 use axum::Router;
+use backend::{AppState, error::AppError, routes};
 use dotenvy::dotenv;
 use sqlx::{migrate, postgres::PgPoolOptions};
 use std::{env, time::Duration};
 use tokio::{net::TcpListener, signal};
+use tower_http::trace::TraceLayer;
 use tracing_subscriber::EnvFilter;
-
-mod routes;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -26,7 +26,10 @@ async fn main() -> anyhow::Result<()> {
 
     let pool = PgPoolOptions::new()
         .max_connections(10)
+        .min_connections(1)
         .acquire_timeout(Duration::from_secs(5))
+        .idle_timeout(Duration::from_secs(600))
+        .max_lifetime(Duration::from_secs(1800))
         .connect(&database_url)
         .await
         .context("failed to connect to database")?;
@@ -35,7 +38,13 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("database ready");
 
-    let app = Router::new().nest("/api/v1", routes::router());
+    let app_state = AppState { pool };
+
+    let app = Router::new()
+        .nest("/api/v1", routes::router())
+        .fallback(|| async { AppError::NotFound })
+        .with_state(app_state)
+        .layer(TraceLayer::new_for_http());
 
     let listener = TcpListener::bind((host.as_str(), port))
         .await

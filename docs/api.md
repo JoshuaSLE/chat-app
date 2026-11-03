@@ -19,8 +19,9 @@ _TBD. Proposed shape:_
 ```json
 {
   "error": {
-    "code": "invalid_credentials",
-    "message": "Invalid username or password"
+    "code": "validation_failed",
+    "message": "One or more fields are invalid",
+    "fields": { "email": ["Please enter a valid email address."] }
   }
 }
 ```

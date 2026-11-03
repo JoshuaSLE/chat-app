@@ -12,10 +12,11 @@ tracing-subscriber = { version = "~0.3", features = ["env-filter"] }
 tokio = { version = "~1.54", features = ["full"] }
 
 anyhow = "~1.0"
+thiserror = "~2.0"
 
 serde = { version = "~1.0", features = ["derive"] }
 
-time = "~0.3"
+time = { version = "~0.3", features = ["macros", "serde"] }
 
 uuid = { version = "~1.29", features = ["v7", "serde"] }
 sqlx = { version = "~0.9", features = [
@@ -29,3 +30,8 @@ sqlx = { version = "~0.9", features = [
 ] }
 
 axum = "~0.8"
+
+tower-http = { version = "~0.7", features = ["trace"] }
+
+fancy-regex = "~0.20"
+validator = { version = "~0.21", features = ["derive"] }

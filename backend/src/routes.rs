@@ -1,9 +1,23 @@
-use axum::{Router, routing::get};
+use axum::{
+    Router,
+    http::StatusCode,
+    routing::{get, post},
+};
 
-pub fn router() -> Router {
-    Router::new().route("/health", get(health_check))
+use crate::AppState;
+
+mod auth;
+
+pub fn router() -> Router<AppState> {
+    Router::new()
+        .route("/health", get(health))
+        .nest("/auth", auth_router())
 }
 
-async fn health_check() -> &'static str {
-    "Hello world!"
+async fn health() -> StatusCode {
+    StatusCode::OK
+}
+
+fn auth_router() -> Router<AppState> {
+    Router::new().route("/register", post(auth::register))
 }
