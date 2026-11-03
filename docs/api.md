@@ -9,7 +9,7 @@
 - Auth: session cookie. Details in [security.md](security.md).
 - IDs: UUID strings (v7).
 - Timestamps: RFC 3339 / ISO 8601 in UTC.
-- Versioning: _TBD (e.g. `/api/v1`)._
+- Versioning: `/api/v1`
 - Pagination: cursor-based on `id` (`?before=<uuid>&limit=50`). (Proposed)
 
 ## Error format
