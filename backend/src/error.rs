@@ -34,6 +34,9 @@ pub enum AppError {
 
     #[error(transparent)]
     Internal(#[from] anyhow::Error),
+
+    #[error("invalid invitation")]
+    InvalidInvite,
 }
 
 #[derive(Serialize)]
@@ -49,6 +52,7 @@ struct ErrorDetail {
     fields: Option<HashMap<String, Vec<String>>>,
 }
 
+// Helper function to convert validation errors into a map of field messages
 fn field_messages(errors: &ValidationErrors) -> HashMap<String, Vec<String>> {
     errors
         .field_errors()
@@ -109,6 +113,12 @@ impl IntoResponse for AppError {
                     None,
                 )
             }
+            AppError::InvalidInvite => (
+                StatusCode::UNPROCESSABLE_ENTITY,
+                "invalid_invite",
+                "Invitation code is invalid, expired, or already used".to_string(),
+                None,
+            ),
         };
 
         (

@@ -44,4 +44,7 @@ pub struct RegisterUser {
         )
     )]
     pub password: String,
+
+    #[validate(length(min = 1, max = 128, message = "Invitation code is required."))]
+    pub invite_code: String,
 }

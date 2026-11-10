@@ -38,7 +38,7 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("database ready");
 
-    let app_state = AppState { pool };
+    let app_state = AppState { db: pool };
 
     let app = Router::new()
         .nest("/api/v1", routes::router())
