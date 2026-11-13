@@ -39,7 +39,6 @@ pub async fn register(
     let email = payload.email.trim().to_lowercase();
     let code_hash = hash_code(payload.invite_code.trim());
 
-    // Cheap compile-time checked pre-check using query_scalar!
     let valid = sqlx::query_scalar!(
         r#"
         SELECT EXISTS (
@@ -56,7 +55,6 @@ pub async fn register(
         return Err(AppError::InvalidInvite);
     }
 
-    // Argon2 is CPU-heavy: keep it off the async runtime threads.
     let password = payload.password;
     let password_hash = tokio::task::spawn_blocking(move || hash_password(&password))
         .await

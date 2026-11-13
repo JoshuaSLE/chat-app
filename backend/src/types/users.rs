@@ -1,24 +1,28 @@
-use fancy_regex::Regex;
+use regex::Regex;
 use serde::Deserialize;
 use std::sync::LazyLock;
 use validator::{Validate, ValidationError};
 
 static USERNAME_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9_]+$").unwrap());
 
-static PASSWORD_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).*$").unwrap());
-
 fn validate_username(username: &str) -> Result<(), ValidationError> {
-    match USERNAME_RE.is_match(username) {
-        Ok(true) => Ok(()),
-        _ => Err(ValidationError::new("format")),
+    if USERNAME_RE.is_match(username) {
+        Ok(())
+    } else {
+        Err(ValidationError::new("format"))
     }
 }
 
 fn validate_password(password: &str) -> Result<(), ValidationError> {
-    match PASSWORD_RE.is_match(password) {
-        Ok(true) => Ok(()),
-        _ => Err(ValidationError::new("complexity")),
+    let has_lower = password.chars().any(|c| c.is_ascii_lowercase());
+    let has_upper = password.chars().any(|c| c.is_ascii_uppercase());
+    let has_digit = password.chars().any(|c| c.is_ascii_digit());
+    let has_special = password.chars().any(|c| !c.is_ascii_alphanumeric());
+
+    if has_lower && has_upper && has_digit && has_special {
+        Ok(())
+    } else {
+        Err(ValidationError::new("complexity"))
     }
 }
 
