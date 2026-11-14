@@ -46,13 +46,21 @@ CREATE DATABASE chat_app_dev OWNER chat_app_dev;
 | password_hash | text NOT NULL        | Argon2id (PHC string)       |
 | created_at    | timestamptz NOT NULL | default `now()`             |
 
+### invitations
+
+| Column     | Type                 | Notes                          |
+| ---------- | -------------------- | ------------------------------ |
+| id         | uuid PK              | UUIDv7, app-generated          |
+| code_hash  | bytea                | SHA256 hash of invitation code |
+| created_by | uuid                 | UUIDv7, app-generated          |
+| created_at | timestamptz NOT NULL | default `now()`                |
+| expires_at | timestamptz NOT NULL | `now() + 7 days` app-generated |
+| used_by    | uuid                 | UUIDv7, app-generated          |
+| used_at    | timestamptz          |                                |
+
 ### sessions
 
 _TBD (milestone 3): hashed token, user_id, created/expires/last_seen, revocation._
-
-### invitations
-
-_TBD (milestone 3): hashed code, created_by, expiry, used_by/used_at._
 
 ### conversations / memberships
 

@@ -5,6 +5,7 @@ use validator::{Validate, ValidationError};
 
 static USERNAME_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9_]+$").unwrap());
 
+// Custom validator for username
 fn validate_username(username: &str) -> Result<(), ValidationError> {
     if USERNAME_RE.is_match(username) {
         Ok(())
@@ -13,6 +14,7 @@ fn validate_username(username: &str) -> Result<(), ValidationError> {
     }
 }
 
+// Custom validator for password
 fn validate_password(password: &str) -> Result<(), ValidationError> {
     let has_lower = password.chars().any(|c| c.is_ascii_lowercase());
     let has_upper = password.chars().any(|c| c.is_ascii_uppercase());

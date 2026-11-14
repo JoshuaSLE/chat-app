@@ -7,6 +7,15 @@ use crate::{
     types::users::RegisterUser,
 };
 
+/// Hashes the password for storage.
+///
+/// # Arguments
+///
+/// * `password` - The password to hash.
+///
+/// # Returns
+///
+/// * `Result<String, AppError>` - The hashed password as a string, or an error if the hashing fails.
 fn hash_password(password: &str) -> Result<String, AppError> {
     Argon2::default()
         .hash_password(password.as_bytes())
@@ -14,6 +23,15 @@ fn hash_password(password: &str) -> Result<String, AppError> {
         .map_err(|e| anyhow::anyhow!("password hashing failed: {e}").into())
 }
 
+/// Maps an error from a SQLx insert operation to an AppError.
+///
+/// # Arguments
+///
+/// * `e` - The SQLx error to map.
+///
+/// # Returns
+///
+/// * `AppError` - The mapped error.
 fn map_user_insert_error(e: sqlx::Error) -> AppError {
     if let sqlx::Error::Database(db) = &e {
         if db.is_unique_violation() {
@@ -31,6 +49,16 @@ fn map_user_insert_error(e: sqlx::Error) -> AppError {
     e.into()
 }
 
+/// Registers a new user in the database.
+///
+/// # Arguments
+///
+/// * `State(state): State<AppState>` - The application state.
+/// * `ValidatedJson(payload): ValidatedJson<RegisterUser>` - The validated JSON payload containing user registration details.
+///
+/// # Returns
+///
+/// * `Result
 pub async fn register(
     State(state): State<AppState>,
     ValidatedJson(payload): ValidatedJson<RegisterUser>,
