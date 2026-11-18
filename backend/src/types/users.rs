@@ -1,6 +1,7 @@
 use regex::Regex;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
+use uuid::Uuid;
 use validator::{Validate, ValidationError};
 
 static USERNAME_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9_]+$").unwrap());
@@ -53,4 +54,19 @@ pub struct RegisterUser {
 
     #[validate(length(min = 1, max = 128, message = "Invitation code is required."))]
     pub invite_code: String,
+}
+
+#[derive(Validate, Deserialize)]
+pub struct LoginUser {
+    #[validate(length(min = 3, max = 32, message = "Username is short or too long."))]
+    pub username: String,
+
+    #[validate(length(min = 8, max = 128, message = "Password is short or too long."))]
+    pub password: String,
+}
+
+#[derive(Serialize)]
+pub struct UserResponse {
+    pub id: Uuid,
+    pub username: String,
 }

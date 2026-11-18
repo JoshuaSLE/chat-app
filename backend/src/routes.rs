@@ -22,5 +22,7 @@ async fn health() -> StatusCode {
 
 // auth router to handle authentication requests
 fn auth_router() -> Router<AppState> {
-    Router::new().route("/register", post(auth::register))
+    Router::new()
+        .route("/register", post(auth::register))
+        .route("/login", post(auth::login))
 }

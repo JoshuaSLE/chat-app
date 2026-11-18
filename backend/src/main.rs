@@ -1,4 +1,5 @@
 use anyhow::Context;
+use argon2::{Argon2, PasswordHasher};
 use axum::Router;
 use backend::{AppState, error::AppError, routes};
 use dotenvy::dotenv;
@@ -38,7 +39,13 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("database ready");
 
-    let app_state = AppState { db: pool };
+    let app_state = AppState {
+        db: pool,
+        dummy_hash: Argon2::default()
+            .hash_password(b"dummy")
+            .unwrap()
+            .to_string(),
+    };
 
     let app = Router::new()
         .nest("/api/v1", routes::router())

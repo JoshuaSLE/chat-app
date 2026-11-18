@@ -48,15 +48,15 @@ CREATE DATABASE chat_app_dev OWNER chat_app_dev;
 
 ### invitations
 
-| Column     | Type                 | Notes                          |
-| ---------- | -------------------- | ------------------------------ |
-| id         | uuid PK              | UUIDv7, app-generated          |
-| code_hash  | bytea                | SHA256 hash of invitation code |
-| created_by | uuid                 | UUIDv7, app-generated          |
-| created_at | timestamptz NOT NULL | default `now()`                |
-| expires_at | timestamptz NOT NULL | `now() + 7 days` app-generated |
-| used_by    | uuid                 | UUIDv7, app-generated          |
-| used_at    | timestamptz          |                                |
+| Column     | Type                 | Notes                                             |
+| ---------- | -------------------- | ------------------------------------------------- |
+| id         | uuid PK              | UUIDv7, app-generated                             |
+| code_hash  | bytea                | SHA256 hash of randomly generated invitation code |
+| created_by | uuid                 | UUIDv7, app-generated                             |
+| created_at | timestamptz NOT NULL | default `now()`                                   |
+| expires_at | timestamptz NOT NULL | `now() + 7 days` app-generated                    |
+| used_by    | uuid                 | UUIDv7, app-generated                             |
+| used_at    | timestamptz          |                                                   |
 
 ### sessions
 
